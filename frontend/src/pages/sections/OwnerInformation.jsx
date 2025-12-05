@@ -1,28 +1,7 @@
-"use client"
-
-import { useState } from "react"
 import { User, Phone, Mail, FileText, Upload } from "lucide-react"
-import { useLocation, useNavigate } from "react-router-dom"
-import BackToMenu from "./BackToMenu.jsx"
-import { useFormContext } from "../context/shared/PersonalFormProvider.jsx"
+import { useFormContext } from "../../context/shared/PersonalFormProvider.jsx"
 function OwnerInformationForm() {
-    const { state } = useLocation()
-    const navigate = useNavigate();
     const { formData, handleInputChange, handleFileChange } = useFormContext()
-    const propertyType = state?.propertyType || "N/A";
-
-
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        const form = e.currentTarget
-        if (!form.checkValidity()) {
-            form.reportValidity() 
-            return
-        }
-        // Si todo es válido, avanzamos
-        navigate( propertyType)
-    }
-
     return (
 
         <div className="bg-white rounded-lg shadow-lg p-8">
@@ -34,7 +13,7 @@ function OwnerInformationForm() {
                 <div className="w-full h-1 bg-blue-600 rounded-full"></div>
             </div>
 
-            <form className="space-y-8">
+            <div className="space-y-8" >
                 {/* 1.1 Información Personal */}
                 <div className="space-y-6">
                     <h3 className="text-lg font-semibold text-gray-800 border-b border-gray-200 pb-2">
@@ -81,7 +60,7 @@ function OwnerInformationForm() {
                             <div className="relative">
                                 <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                                 <input
-                                    type="tel"
+                                    type="number"
                                     name="telefono"
                                     value={formData.telefono}
                                     onChange={handleInputChange}
@@ -184,7 +163,7 @@ function OwnerInformationForm() {
                                 <span className="ml-2 text-gray-700">Otro:</span>
                             </label>
 
-                            {formData.relationshipType === "otro" && (
+                            {formData.tipoRelacion === "otro" && (
                                 <div className="ml-6">
                                     <input
                                         type="text"
@@ -333,7 +312,7 @@ function OwnerInformationForm() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">1.7. Adjuntar Datum *</label>
-                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+                            <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
                                 <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                                 <input
                                     type="file"
@@ -357,7 +336,7 @@ function OwnerInformationForm() {
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 1.8. Adjuntar comprobante de pago *
                             </label>
-                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+                            <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
                                 <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                                 <input
                                     type="file"
@@ -378,21 +357,7 @@ function OwnerInformationForm() {
                         </div>
                     </div>
                 </div>
-
-                <div className="flex justify-end pt-8 border-t border-gray-200">
-                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-                        <BackToMenu />
-                    </div>
-                    <button
-                        type="submit"
-                        className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 shadow-lg disabled:opacity-60"
-                    >
-                        Continuar a Sección 2
-                    </button>
-                    
-                </div>
-            </form>
-
+            </div>
         </div>
     )
 }

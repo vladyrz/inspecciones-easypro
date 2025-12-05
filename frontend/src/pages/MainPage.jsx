@@ -1,57 +1,64 @@
-// File: src/pages/MainPage.jsx
-"use client";
-import React from "react";
-import { Building2, Home, Store } from "lucide-react";
-import { useNavigate } from "react-router-dom"; 
-import Footer from "../components/Footer.jsx";
-import OwnerInformationForm from "../components/OwnerInformation.jsx";
 
-/**
- * @typedef {"casa" | "lote" | "centro-comercial" | null} PropertyType
- */
+import React from "react";
+import { Building2, Home, Store, HouseWifi, Trees} from "lucide-react";
+import { useNavigate } from "react-router-dom"; 
+import Director from "../components/Builder/Director";
 
 function MainPage() {
-  // Estado
-  /** @type {[PropertyType, React.Dispatch<React.SetStateAction<PropertyType>>]} */
-  const [selectedType, setSelectedType] = React.useState(null);
-  const navigate = useNavigate();
 
+  const [selectedType, setSelectedType] = React.useState(null);
+  const [showDirector, setShowDirector] = React.useState(false);
+  const navigate = useNavigate();
   const propertyTypes = [
     {
-      id: "casa",
+      id: "Casa",
       title: "Casa",
       description: "Inspección completa de vivienda residencial",
       icon: Home,
       color: "bg-blue-50 hover:bg-blue-100 border-blue-200",
-      enlace: "/lote-vivienda",
     },
     {
-      id: "lote",
-      title: "Lote",
-      description: "Evaluación de terreno y construcción",
+      id: "Apartamento",
+      title: "Apartamento",
+      description: "Inspección de unidad habitacional en edificio",
       icon: Building2,
       color: "bg-blue-50 hover:bg-blue-100 border-blue-200",
-      enlace: "/terreno",
     },
     {
-      id: "centro-comercial",
+      id: "Lote",
+      title: "Lote",
+      description: "Evaluación de terreno y construcción",
+      icon: Trees,
+      color: "bg-blue-50 hover:bg-blue-100 border-blue-200",
+    },
+    {
+      id: "Centro-Comercial",
       title: "Centro Comercial",
       description: "Inspección de local comercial",
       icon: Store,
       color: "bg-blue-50 hover:bg-blue-100 border-blue-200",
-      enlace: "/local-comercial",
     },
+
+    {
+      id:"PropiedadLujo",
+      title: "Propiedad de lujo",
+      description: "Inspección especializada para propiedades de lujo",
+      icon: HouseWifi ,
+      color: "bg-blue-50 hover:bg-blue-100 border-blue-200",
+    }
+    
   ];
 
   const handleTypeSelection = (type) => {
     setSelectedType(type);
+    setShowDirector(false);
   };
 
-  const handleStartInspection = () => {
+  const handleStartInspection = (selectedType) => {
     if (!selectedType) return;
     const selectedProperty = propertyTypes.find((p) => p.id === selectedType);
-    const direccion = selectedProperty ? selectedProperty.enlace : "/";
-    if (selectedProperty) navigate("/owner-information", { state: { propertyType: direccion } });
+    const target = selectedProperty ? selectedProperty.id: selectedType;
+    navigate(`/inspeccion/${encodeURIComponent(target)}`);
   };
 
   return (
@@ -109,7 +116,7 @@ function MainPage() {
             {selectedType && (
               <div className="text-center">
                 <button
-                  onClick={handleStartInspection}
+                  onClick={() => handleStartInspection(selectedType)}
                   className="w-full sm:w-auto inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-6 sm:px-8 py-3 text-base sm:text-lg font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
                 >
                   Iniciar Inspección de {propertyTypes.find((p) => p.id === selectedType)?.title}
@@ -119,6 +126,11 @@ function MainPage() {
           </div>
         </div>
 
+          {showDirector && (
+            <div className="max-w-5xl mx-auto mt-8">
+              <Director tipo={selectedType}  />
+            </div>
+          )}
         {/* Info Section */}
         <section className="mx-auto mt-16 sm:mt-20 lg:mt-24 scroll-mt-24 md:scroll-mt-28 lg:scroll-mt-32 px-4 sm:px-6 lg:px-8 max-w-3xl sm:max-w-4xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl">
           <div className="grid md:grid-cols-2 gap-6">
